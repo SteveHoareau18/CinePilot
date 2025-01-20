@@ -1,0 +1,175 @@
+class MovieService {
+
+    movies = [
+        {
+            "id": 1,
+            "name": "Le Grand Évasion",
+            "category": "Action",
+            "author": "Jean Dupont",
+            "actor": "Pierre Martin",
+            "rating": 4,
+            "image": "https://media.senscritique.com/media/000012268355/0/la_grande_evasion.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 2,
+            "name": "Amour et Destin",
+            "category": "Romance",
+            "author": "Marie Leblanc",
+            "actor": "Sophie Moreau",
+            "rating": 3.8,
+            "image": "https://resize.elle.fr/article/var/oa/content/images/tests/original/4065_test-1670859518.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 3,
+            "name": "Les Mystères de Paris",
+            "category": "Mystère",
+            "author": "Paul Girard",
+            "actor": "Luc Durand",
+            "rating": 4.9,
+            "image": "https://lisez0.cdnstatics.com/usuaris/libros/fotos/9782264083/m_libros/9782264082992ORI.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 4,
+            "name": "Le Rire d'Anna",
+            "category": "Comédie",
+            "author": "Julie Vernier",
+            "actor": "Anna Simon",
+            "rating": 4.2,
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQj93XsGWSZYjLGfQxewFaFLH3Msvp0i-46A&s",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 5,
+            "name": "La Guerre des Ombres",
+            "category": "Science-fiction",
+            "author": "Albert Lemaitre",
+            "actor": "François Dubois",
+            "rating": 3,
+            "image": "https://m.media-amazon.com/images/I/71CZTGdF9YL._UF1000,1000_QL80_.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 6,
+            "name": "Le Chant de la Forêt",
+            "category": "Aventure",
+            "author": "Émilie Roche",
+            "actor": "Nicolas Lefèvre",
+            "rating": 2.3,
+            "image": "https://www.advitamdistribution.com/app/uploads/2019/03/LE-CHANT-DE-LA-FORET_AFF_120-526x712.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 7,
+            "name": "Sous les Étoiles",
+            "category": "Drame",
+            "author": "Hélène Garnier",
+            "actor": "Claire Fontaine",
+            "rating": 4.5,
+            "image": "https://www.editions-memo.fr/wp-content/uploads/bfi_thumb/SousLesEtoiles_DP_300-1-6itj62bdjk2cz2fgsodmsbhn2cdffcovbgtdyrxz403.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 8,
+            "name": "Le Secret du Pharaon",
+            "category": "Historique",
+            "author": "Gérard Petit",
+            "actor": "Antoine Rousseau",
+            "rating": 3.8,
+            "image": "https://static.fnac-static.com/multimedia/Images/FR/NR/11/da/4d/5102097/1507-1/tsp20150602112836/Le-secret-du-pharaon.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 9,
+            "name": "L'Ombre du Silence",
+            "category": "Thriller",
+            "author": "Lucas Bernard",
+            "actor": "Isabelle Roy",
+            "rating": 3.6,
+            "image": "https://static.fnac-static.com/multimedia/PE/Images/FR/NR/29/27/33/3352361/1540-1/tsp20240620082020/L-ombre-du-silence.jpg",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        },
+        {
+            "id": 10,
+            "name": "Les Voyages d'Élodie",
+            "category": "Fantastique",
+            "author": "Charlotte Besson",
+            "actor": "Élodie Perrin",
+            "rating": 2.4,
+            "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZJezmj2m9LS3V9JzJMTb8r8RBrPF4IixF2Q&s",
+            "price": {
+                "child": "5",
+                "student": "8",
+                "adult": "13"
+            }, favorite: false
+        }
+    ]
+
+
+
+
+    getMovies(search = { id: null, name: null, category: null, author: null, actor: null, rating: null }, page = 1, itemPerPage = 10) {
+        switch (search) {
+            case search.id:
+                return this.movies.find((movie) => movie.id == search.id)
+
+            case search.name:
+                return this.movies.filter((movie) => movie.name == search.name)
+
+            case search.category:
+                return this.movies.filter((movie) => movie.category == search.category)
+
+            case search.author:
+                return this.movies.filter((movie) => movie.author == search.author)
+
+            case search.actor:
+                return this.movies.filter((movie) => movie.actor == search.actor)
+
+            case search.rating:
+                return this.movies.sort(search.rating)
+
+            default:
+                return this.movies;
+        }
+    }
+}
+
+export default new MovieService()
