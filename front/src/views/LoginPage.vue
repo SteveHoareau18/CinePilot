@@ -8,7 +8,7 @@
                 </div>
                 <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium">Bienvenue</div>
                 <span class="text-surface-600 dark:text-surface-200 font-medium mr-2">Pas de compte ?</span>
-                <a class="font-medium no-underline text-blue-500 cursor-pointer">Créer mon compte !</a>
+                <a class="font-medium no-underline text-blue-500 cursor-pointer" @click="router.push('/login/create')">Créer mon compte !</a>
             </section>
             <Form v-slot="$form" :initialValues :resolver @submit="login" class="flex flex-col gap-6 w-full">
                 <div class="w-full flex flex-col gap-8">
@@ -56,6 +56,9 @@
 import Auth from '@/services/Auth';
 import GeneralTools from '@/services/GeneralTools';
 import { reactive, ref } from 'vue';
+import {useRouter} from "vue-router"
+
+const router = useRouter()
 
 const initialValues = reactive({
     email: "",
