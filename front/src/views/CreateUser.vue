@@ -104,7 +104,7 @@ const resolver = ref(zodResolver(
                 message: 'Au moins un chiffre.'
             }),
         passwordConfirm: z.string(),
-        username: z.string()
+        username: z.string().min(3, { message: 'Minimum 3 caractères.' })
     }).refine((value) => value.password == value.passwordConfirm, {
         message: "Les mots de passe ne correspondent pas",
         path: ["passwordConfirm"],
