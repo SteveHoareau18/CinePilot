@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+/home/CinePilot/back/spring/src/main/resources/application.properties
+/home/CinePilot/back/spring/.env
+/home/CinePilot/back/spring/app-token.sh
+/home/CinePilot/back/spring/env.sh
