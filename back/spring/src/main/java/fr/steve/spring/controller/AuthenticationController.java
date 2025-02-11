@@ -9,10 +9,11 @@ import fr.steve.spring.service.AuthenticationService;
 import fr.steve.spring.service.JwtService;
 import fr.steve.spring.service.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+
+
 
 @RequestMapping("/auth")
 @RestController
@@ -22,8 +23,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService,
-                                    UserService userService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserService userService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
         this.userService = userService;
@@ -47,5 +47,18 @@ public class AuthenticationController {
         loginResponse.setExpiresIn(jwtService.getExpirationTime());
 
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyToken() {
+        // Retrieve authentication from SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Check if the user is authenticated
+        if (authentication != null && authentication.isAuthenticated()) {
+            return ResponseEntity.ok("Token is valid");
+        }
+
+        return ResponseEntity.status(401).body("Invalid or expired token");
     }
 }
