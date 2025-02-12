@@ -8,23 +8,24 @@
                 </div>
                 <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium">Bienvenue</div>
                 <span class="text-surface-600 dark:text-surface-200 font-medium mr-2">Pas de compte ?</span>
-                <a class="font-medium no-underline text-blue-500 cursor-pointer" @click="router.push('/login/create')">Créer mon compte !</a>
+                <a class="font-medium no-underline text-blue-500 cursor-pointer"
+                    @click="router.push('/login/create')">Créer mon compte !</a>
             </section>
             <Form v-slot="$form" :initialValues :resolver @submit="login" class="flex flex-col gap-6 w-full">
                 <div class="w-full flex flex-col gap-8">
                     <div class="flex flex-col gap-1 w-full">
                         <FloatLabel class="w-full">
-                            <InputText fluid name="email" :disabled="loading" v-model="userCreds.email" />
-                            <label for="email">Adresse email</label>
+                            <InputText fluid name="username" :disabled="loading" v-model="initialValues.username" />
+                            <label for="username">Nom d'utilisateur</label>
                         </FloatLabel>
-                        <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">{{
-                            $form.email.error?.message }}</Message>
+                        <Message v-if="$form.username?.invalid" severity="error" size="small" variant="simple">{{
+                            $form.username.error?.message }}</Message>
                     </div>
 
                     <div class="flex flex-col gap-1">
                         <FloatLabel class="w-full">
                             <Password fluid input-id="password" name="password" :feedback="false" :disabled="loading"
-                               x v-model="userCreds.password" />
+                                toggle-mask x v-model="initialValues.password" />
                             <label for="password">Mot de passe</label>
                         </FloatLabel>
                         <Message v-if="$form.password?.invalid" severity="error" size="small" variant="simple">{{
@@ -33,7 +34,7 @@
 
                     <div class="flex items-center justify-between mb-12">
                         <div class="flex items-center">
-                            <Checkbox id="remember" binary class="mr-2" v-model="userCreds.remember"></Checkbox>
+                            <Checkbox id="remember" binary class="mr-2" v-model="initialValues.remember"></Checkbox>
                             <label for="remember">Se souvenir de moi</label>
                         </div>
                         <a class="font-medium no-underline ml-2 text-blue-500 text-right cursor-pointer">Mot de passe
@@ -42,7 +43,7 @@
                     </div>
 
                     <Button label="Se connecter" icon="pi pi-user" class="w-full p-2" :loading="loading"
-                        @click="login"></Button>
+                        type="submit"></Button>
                 </div>
             </Form>
         </div>
@@ -54,50 +55,54 @@
 
 <script setup>
 import Auth from '@/services/Auth';
-import GeneralTools from '@/services/GeneralTools';
 import { reactive, ref } from 'vue';
-import {useRouter} from "vue-router"
+import { useRouter } from "vue-router"
+import { zodResolver } from "@primevue/forms/resolvers/zod"
+import { z } from 'zod';
+import { useUserStore } from '@/stores/user';
+import { useToast } from 'primevue';
 
 const router = useRouter()
+const userStore = useUserStore()
+const toast = useToast()
 
 const initialValues = reactive({
-    email: "",
+    username: "",
     password: "",
-    invalid: false,
     remember: false
 });
 
-const userCreds = ref({
-    email: "",
-    password: "",
-    invalid: false,
-    remember: false
-})
-
 const loading = ref(false)
 
-const resolver = ({ values }) => {
-    loading.value = true
-    const errors = {};
-    
-    if (!values.email || !GeneralTools.checkValidEmail(values.email)) {
-        errors.email = [{ message: "Une erreur est survenue lors de la vérification de l'email" }];
-    }
-    if (!values.password || !GeneralTools.checkNoEmptyInput(values.password)) {
-        errors.password = [{ message: "Une erreur est survenue" }];
-    }
-    
-    loading.value = false
-    return {
-        errors
-    };
-}
+const resolver = ref(
+    zodResolver(
+        z.object(
+            {
+                username: z.string().min(3, { message: 'Minimum 3 caractères.' }),
+                password: z.string(),
+                remember: z.boolean().optional()
+            }
+        )
+    )
+)
 
 const login = async ({ valid }) => {
     loading.value = true
 
     if (valid) {
-        const server = await Auth.verifyCredentials({ email: userCreds.value.email, password: userCreds.value.password })
+        const { data } = await Auth.verifyCredentials({ email: userCreds.value.email, password: userCreds.value.password })
+
+        if (data.token) {
+            userStore.setUser({token: data.token, tkExpireDate: data.expiresIn, username: initialValues.username})
+            router.push("/home")
+        } else {
+            toast.add({
+                life: 5000,
+                severity: "warn",
+                summary: "Une erreur est survenue",
+                detail: "Votre mot de passe ou nom d'utilisateur semble incorrect"
+            })
+        }
     }
 
     loading.value = false

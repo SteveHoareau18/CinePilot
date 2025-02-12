@@ -3,17 +3,12 @@ import { useToast } from 'primevue'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: {
-      // firstname: "Pedram",
-      // lastname: "AGUIARD",
-      // username: "Ynov113",
-      // email: "ynov@ynov.com",
-    },
+    user: {},
     favMovie: []
   }),
   getters: {
-    getUser: (state) => {      
-      return Object.keys(state.user).length == 0  ? null : state.user
+    getUser: (state) => {
+      return Object.keys(state.user).length == 0 ? null : state.user
     },
     getUserFullname: (state) => {
       return `${state.user.lastname.toUpperCase()} ${state.user.firstname}`
@@ -35,6 +30,16 @@ export const useUserStore = defineStore('user', {
           detail: "Quelque chose d'inatendu s'est produit",
           severity: "error"
         })
+      }
+    },
+    setUser({ firstname, lastname, username, email, token, tkExpireDate}) {
+      this.user = {
+        firstname: firstname ?? this.user.firstname,
+        lastname: lastname ?? this.user.lastname,
+        username: username ?? this.user.username,
+        email: email ?? this.user.email,
+        token: token ?? this.user.token,
+        tkExpireDate: tkExpireDate ?? this.user.tkExpireDate,
       }
     }
   }
