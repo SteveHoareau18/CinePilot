@@ -68,7 +68,7 @@ public class AuthenticationController {
 
             // Check if the token is valid
             if (jwtService.isTokenValid(token, user)) {
-                return ResponseEntity.ok("Token is valid");
+                return ResponseEntity.ok(userService.genereUserResponse(user));
             } else {
                 return ResponseEntity.status(401).body("Invalid or expired token");
             }
