@@ -3,7 +3,13 @@ import { useToast } from 'primevue'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: {},
+    user: {
+      firstname: "ùsejfnmsoe",
+      lastname: "kjsbemfije",
+      username: "KIIIi",
+      email: "msiuehfiushef@ooo.com",
+
+    },
     favMovie: []
   }),
   getters: {

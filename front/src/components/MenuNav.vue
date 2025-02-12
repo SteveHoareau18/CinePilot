@@ -1,7 +1,11 @@
 <template>
     <Menubar :model="items">
         <template #item="{ item, props, hasSubmenu, root }">
-            <span class="flex items-center gap-2 p-2">
+            <span class="flex items-center gap-2 p-2" v-if="item.route" @click="router.push(item.route)">
+                <i :class="`${item.icon} ${item.color} h-fit`"></i>
+                <span>{{ item.label }}</span>
+            </span>
+            <span class="flex items-center gap-2 p-2" v-else>
                 <i :class="`${item.icon} ${item.color} h-fit`"></i>
                 <span>{{ item.label }}</span>
                 <i v-if="hasSubmenu"
@@ -10,11 +14,11 @@
         </template>
         <template #end>
             <Button variant="text" @click="userMenuVisible = true" v-if="user != null">
-                <Avatar v-if="user.picture" :image="user.picture" :alt="`image du ${user.name}`" shape="circle" />
+                <Avatar v-if="user.picture" :image="user.picture" :alt="`image du ${user.username}`" shape="circle" />
                 <Avatar v-else icon="pi pi-user" :alt="`image par défaut`" shape="circle" />
-                <span class="font-bold text-sm block">{{ userStore.getUserFullname }}</span>
+                <span class="font-bold text-sm block">{{ user.username }}</span>
             </Button>
-            <Button variant="text" @click="router.push('/login')">
+            <Button variant="text" @click="router.push('/login')" v-else>
                 <Avatar icon="pi pi-user" :alt="`image par défaut`" shape="circle" />
                 <span class="font-bold text-sm block">Se connecter</span>
             </Button>

@@ -61,9 +61,11 @@ import { zodResolver } from "@primevue/forms/resolvers/zod"
 import { z } from 'zod';
 import { useUserStore } from '@/stores/user';
 import { useToast } from 'primevue';
+import { useAppStore } from '@/stores/app';
 
 const router = useRouter()
 const userStore = useUserStore()
+const appStore = useAppStore()
 const toast = useToast()
 
 const initialValues = reactive({
@@ -93,7 +95,8 @@ const login = async ({ valid }) => {
         const { data } = await Auth.verifyCredentials({ username: initialValues.username, password: initialValues.password })
 
         if (data.token) {
-            userStore.setUser({token: data.token, tkExpireDate: data.expiresIn, username: initialValues.username})
+            userStore.setUser({token: data.token, tkExpireDate: data.expiresIn, username: initialValues.username, admin: initialValues.username == 'steve.hoareau1@gmail.com'})
+            if (initialValues.username == 'steve.hoareau1@gmail.com') appStore.setAppMode(true)
             router.push("/home")
         } else {
             toast.add({
