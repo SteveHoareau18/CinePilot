@@ -8,7 +8,7 @@
                 </div>
                 <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium">Bienvenue</div>
                 <span class="text-surface-600 dark:text-surface-200 font-medium mr-2">Déjà un compte ?</span>
-                <a class="font-medium no-underline text-blue-500 cursor-pointer">Je me connecte !</a>
+                <a class="font-medium no-underline text-blue-500 cursor-pointer" @click="router.push('/login')">Je me connecte !</a>
             </section>
             <Form v-slot="$form" :initialValues :resolver @submit="login" class="grid grid-cols-12 col-span-12 lg:col-span-10 gap-8 w-full pt-8">
                 <div class="col-span-12 lg:col-span-6">
@@ -61,7 +61,7 @@
                         $form.passwordConfirm.error?.message }}</Message>
                 </div>
 
-                <Button label="Se connecter" icon="pi pi-user" class="col-span-full py-2" :loading="loading"
+                <Button label="Créer mon compte" icon="pi pi-user" class="col-span-full py-2" :loading="loading"
                     type="submit"></Button>
             </Form>
         </div>
@@ -75,7 +75,10 @@
 import Auth from '@/services/Auth';
 import { zodResolver } from "@primevue/forms/resolvers/zod"
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { z } from 'zod';
+
+const router = useRouter()
 
 const initialValues = reactive({
     firstname: "",
@@ -126,7 +129,6 @@ const login = async ({ valid }) => {
             }
         )
         console.log(data);
-        
     }
 
     loading.value = false
