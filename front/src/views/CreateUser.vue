@@ -142,7 +142,7 @@ const login = async ({ valid }) => {
             })
 
             // Récupérer le token
-            const { data } = await Auth.verifyCredentials({ email: initialValues.email, password: initialValues.password })
+            const { data } = await Auth.verifyCredentials({ username: initialValues.username, password: initialValues.password })
 
             if (data.token) {
                 userStore.setUser({ token: data.token, tkExpireDate: data.expiresIn})

@@ -3,11 +3,11 @@ import axios from "axios";
 class AuthService {
 
     async verifyCredentials(creds) {
-        return await axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`, creds)
+        return await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, creds)
     }
 
     async createUser(creds) {
-        return await axios.post(`${import.meta.env.VITE_BACKEND_URL}/signup`, creds)
+        return await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, creds)
     }
 
     async relogUser(tk) {
