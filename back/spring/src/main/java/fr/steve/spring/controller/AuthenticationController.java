@@ -58,7 +58,6 @@ public class AuthenticationController {
                 return ResponseEntity.badRequest().body("Invalid token: no username found");
             }
 
-            // Load user by username (email)
             Optional<User> getUser = userService.findByUsername(username);
             if (getUser.isEmpty()) {
                 return ResponseEntity.badRequest().body("User not found");
@@ -66,7 +65,6 @@ public class AuthenticationController {
 
             User user = getUser.get();
 
-            // Check if the token is valid
             if (jwtService.isTokenValid(token, user)) {
                 return ResponseEntity.ok(userService.genereUserResponse(user));
             } else {

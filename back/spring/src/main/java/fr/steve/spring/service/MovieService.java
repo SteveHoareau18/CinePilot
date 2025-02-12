@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MovieService {
 
-    @Value("${movie.api.url}")  // URL of the PHP backend API
+    @Value("http://localhost:8001")
     private String movieApiUrl;
 
     private final RestTemplate restTemplate;
@@ -18,9 +18,8 @@ public class MovieService {
         this.restTemplate = restTemplate;
     }
 
-    // Fetch movie details by ID from PHP backend
     public Movie fetchMovieById(String movieId) {
-        String url = movieApiUrl + "/movies/" + movieId;  // Assuming your PHP backend exposes this route
+        String url = movieApiUrl + "/movies/" + movieId;
         ResponseEntity<Movie> response = restTemplate.getForEntity(url, Movie.class);
         return response.getBody();
     }

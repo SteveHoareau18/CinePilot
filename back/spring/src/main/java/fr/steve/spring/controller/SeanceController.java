@@ -24,19 +24,15 @@ public class SeanceController {
         this.movieService = movieService;
     }
 
-    // Create a new Seance
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<String> createSeance(@RequestBody SeanceDTO seanceDTO) {
-        // Fetch the movie details (you may want to adjust the movie lookup)
-        // Assuming the movie ID passed in DTO exists in the PHP system
         var movie = movieService.fetchMovieById(seanceDTO.getMovieId());
 
         if (movie == null) {
-            return ResponseEntity.badRequest().body(null);  // Handle invalid movie id
+            return ResponseEntity.badRequest().body(null);
         }
 
-        // Create the Seance object
         Seance seance = new Seance();
         seance.setMovieId(seanceDTO.getMovieId());
         seance.setStartTime(seanceDTO.getStartTime());
