@@ -1,12 +1,17 @@
+import axios from "axios"
+
 class MovieService {
 
     movies = [
         {
             "id": 1,
-            "name": "Le Grand Évasion",
+            "nom": "Le Grand Évasion",
+            "annee": "2022",
+            "realisateur": "Gaêl Monfils",
             "category": "Action",
             "author": "Jean Dupont",
             "actor": "Pierre Martin",
+            "duree": "1h25",
             "rating": 4,
             "image": "https://media.senscritique.com/media/000012268355/0/la_grande_evasion.jpg",
             "price": {
@@ -17,7 +22,7 @@ class MovieService {
         },
         {
             "id": 2,
-            "name": "Amour et Destin",
+            "nom": "Amour et Destin",
             "category": "Romance",
             "author": "Marie Leblanc",
             "actor": "Sophie Moreau",
@@ -31,7 +36,7 @@ class MovieService {
         },
         {
             "id": 3,
-            "name": "Les Mystères de Paris",
+            "nom": "Les Mystères de Paris",
             "category": "Mystère",
             "author": "Paul Girard",
             "actor": "Luc Durand",
@@ -45,7 +50,7 @@ class MovieService {
         },
         {
             "id": 4,
-            "name": "Le Rire d'Anna",
+            "nom": "Le Rire d'Anna",
             "category": "Comédie",
             "author": "Julie Vernier",
             "actor": "Anna Simon",
@@ -59,7 +64,7 @@ class MovieService {
         },
         {
             "id": 5,
-            "name": "La Guerre des Ombres",
+            "nom": "La Guerre des Ombres",
             "category": "Science-fiction",
             "author": "Albert Lemaitre",
             "actor": "François Dubois",
@@ -73,7 +78,7 @@ class MovieService {
         },
         {
             "id": 6,
-            "name": "Le Chant de la Forêt",
+            "nom": "Le Chant de la Forêt",
             "category": "Aventure",
             "author": "Émilie Roche",
             "actor": "Nicolas Lefèvre",
@@ -87,7 +92,7 @@ class MovieService {
         },
         {
             "id": 7,
-            "name": "Sous les Étoiles",
+            "nom": "Sous les Étoiles",
             "category": "Drame",
             "author": "Hélène Garnier",
             "actor": "Claire Fontaine",
@@ -101,7 +106,7 @@ class MovieService {
         },
         {
             "id": 8,
-            "name": "Le Secret du Pharaon",
+            "nom": "Le Secret du Pharaon",
             "category": "Historique",
             "author": "Gérard Petit",
             "actor": "Antoine Rousseau",
@@ -115,7 +120,7 @@ class MovieService {
         },
         {
             "id": 9,
-            "name": "L'Ombre du Silence",
+            "nom": "L'Ombre du Silence",
             "category": "Thriller",
             "author": "Lucas Bernard",
             "actor": "Isabelle Roy",
@@ -129,7 +134,7 @@ class MovieService {
         },
         {
             "id": 10,
-            "name": "Les Voyages d'Élodie",
+            "nom": "Les Voyages d'Élodie",
             "category": "Fantastique",
             "author": "Charlotte Besson",
             "actor": "Élodie Perrin",
@@ -143,16 +148,18 @@ class MovieService {
         }
     ]
 
+    getMoviesFromBackend(id = null) {
+        return axios.get(`${import.meta.env.VITE_BACKEND_MOVIE_URL}/api/films${id ? "/" + id : ""}`)
+    }
 
 
-
-    getMovies(search = { id: null, name: null, category: null, author: null, actor: null, rating: null }, page = 1, itemPerPage = 10) {
+    getMovies(search = { id: null, nom: null, category: null, author: null, actor: null, rating: null }, page = 1, itemPerPage = 10) {
         switch (search) {
             case search.id:
                 return this.movies.find((movie) => movie.id == search.id)
 
-            case search.name:
-                return this.movies.filter((movie) => movie.name == search.name)
+            case search.nom:
+                return this.movies.filter((movie) => movie.nom == search.nom)
 
             case search.category:
                 return this.movies.filter((movie) => movie.category == search.category)

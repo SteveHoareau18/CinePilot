@@ -33,15 +33,63 @@ export const useAppStore = defineStore('store', {
         ]
       },
     ],
+    adminNav: [{
+      label: 'Administration',
+      icon: 'pi pi-wrench',
+      items: [
+        {
+          label: 'Films',
+          items: [
+            {
+              label: "Créer",
+              icon: 'pi pi-plus',
+              route: '/movie/create'
+            },
+            {
+              label: "Modifier",
+              icon: 'pi pi-pencil',
+              route: '/movie/edit'
+            },
+            {
+              label: "Supprimer",
+              icon: 'pi pi-trash',
+              route: '/movie/delete'
+            },
+          ]
+        },
+        {
+          label: 'Salles',
+          items: [
+            {
+              label: "Créer",
+              icon: 'pi pi-plus',
+            },
+            {
+              label: "Modifier",
+              icon: 'pi pi-pencil',
+            },
+            {
+              label: "Supprimer",
+              icon: 'pi pi-trash',
+            },
+          ]
+        },
+      ]
+    },],
     adminMode: false
   }),
   getters: {
     getMenuNav: (state) => {
+      if (state.adminMode) return [...state.menuNav, ...state.adminNav]
       return state.menuNav
     },
     isAppAdminMode: (state) => {
       return state.adminMode
     }
   },
-  actions: {}
+  actions: {
+    setAppMode(admin) {
+      this.adminMode = admin
+    }
+  }
 })
