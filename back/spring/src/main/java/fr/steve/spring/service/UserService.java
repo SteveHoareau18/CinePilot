@@ -28,7 +28,8 @@ public class UserService {
         UserResponse userResponse = new UserResponse();
         userResponse.setEmail(user.getEmail());
         userResponse.setUsername(user.getUsername());
-        userResponse.setFullName(user.getFullName());
+        userResponse.setName(user.getName());
+        userResponse.setFirstName(user.getFirstName());
         userResponse.setEnabled(user.isEnabled());
         userResponse.setCreatedAt(user.getCreatedAt());
         userResponse.setUpdatedAt(user.getUpdatedAt());
