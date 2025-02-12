@@ -10,9 +10,8 @@ import fr.steve.spring.service.JwtService;
 import fr.steve.spring.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.Authentication;
 
+import java.util.Optional;
 
 
 @RequestMapping("/auth")
@@ -49,16 +48,33 @@ public class AuthenticationController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    @GetMapping("/verify")
-    public ResponseEntity<String> verifyToken() {
-        // Retrieve authentication from SecurityContextHolder
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @PostMapping("/verify-token")
+    public ResponseEntity<?> verifyToken(@RequestBody String token) {
+        try {
 
-        // Check if the user is authenticated
-        if (authentication != null && authentication.isAuthenticated()) {
-            return ResponseEntity.ok("Token is valid");
+            String username = jwtService.extractUsername(token);
+
+            if (username == null || username.isEmpty()) {
+                return ResponseEntity.badRequest().body("Invalid token: no username found");
+            }
+
+            // Load user by username (email)
+            Optional<User> getUser = userService.findByUsername(username);
+            if (getUser.isEmpty()) {
+                return ResponseEntity.badRequest().body("User not found");
+            }
+
+            User user = getUser.get();
+
+            // Check if the token is valid
+            if (jwtService.isTokenValid(token, user)) {
+                return ResponseEntity.ok("Token is valid");
+            } else {
+                return ResponseEntity.status(401).body("Invalid or expired token");
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error verifying token: " + e.getMessage());
         }
-
-        return ResponseEntity.status(401).body("Invalid or expired token");
     }
 }
