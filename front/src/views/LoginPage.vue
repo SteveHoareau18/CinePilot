@@ -90,7 +90,7 @@ const login = async ({ valid }) => {
     loading.value = true
 
     if (valid) {
-        const { data } = await Auth.verifyCredentials({ email: initialValues.email, password: initialValues.password })
+        const { data } = await Auth.verifyCredentials({ username: initialValues.username, password: initialValues.password })
 
         if (data.token) {
             userStore.setUser({token: data.token, tkExpireDate: data.expiresIn, username: initialValues.username})
