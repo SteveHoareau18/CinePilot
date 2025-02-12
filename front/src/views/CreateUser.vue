@@ -8,9 +8,11 @@
                 </div>
                 <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium">Bienvenue</div>
                 <span class="text-surface-600 dark:text-surface-200 font-medium mr-2">Déjà un compte ?</span>
-                <a class="font-medium no-underline text-blue-500 cursor-pointer" @click="router.push('/login')">Je me connecte !</a>
+                <a class="font-medium no-underline text-blue-500 cursor-pointer" @click="router.push('/login')">Je me
+                    connecte !</a>
             </section>
-            <Form v-slot="$form" :initialValues :resolver @submit="login" class="grid grid-cols-12 col-span-12 lg:col-span-10 gap-8 w-full pt-8">
+            <Form v-slot="$form" :initialValues :resolver @submit="login"
+                class="grid grid-cols-12 col-span-12 lg:col-span-10 gap-8 w-full pt-8">
                 <div class="col-span-12 lg:col-span-6">
                     <FloatLabel>
                         <InputText fluid name="firstname" :disabled="loading" v-model="initialValues.firstname" />
@@ -45,7 +47,8 @@
                 </div>
                 <div class="col-span-12 lg:col-span-6">
                     <FloatLabel>
-                        <Password fluid name="password" :disabled="loading" v-model="initialValues.password" toggleMask />
+                        <Password fluid name="password" :disabled="loading" v-model="initialValues.password"
+                            toggleMask />
                         <label for="password">Mot de passe</label>
                     </FloatLabel>
                     <Message v-if="$form.password?.invalid" severity="error" size="small" variant="simple">{{
@@ -73,12 +76,16 @@
 
 <script setup>
 import Auth from '@/services/Auth';
+import { useUserStore } from '@/stores/user';
 import { zodResolver } from "@primevue/forms/resolvers/zod"
+import { useToast } from 'primevue';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { z } from 'zod';
 
 const router = useRouter()
+const userStore = useUserStore()
+const toast = useToast()
 
 const initialValues = reactive({
     firstname: "",
@@ -120,7 +127,7 @@ const login = async ({ valid }) => {
     loading.value = true
 
     if (valid) {
-        const {data} = await Auth.createUser(
+        const { status } = await Auth.createUser(
             {
                 fullName: `${initialValues.lastname.toUpperCase()} ${initialValues.firstname}`,
                 username: initialValues.username,
@@ -128,7 +135,36 @@ const login = async ({ valid }) => {
                 password: initialValues.password
             }
         )
-        console.log(data);
+
+        if (status == 200) {
+            userStore.setUser({
+                ...initialValues
+            })
+
+            // Récupérer le token
+            const { data } = await Auth.verifyCredentials({ email: initialValues.email, password: initialValues.password })
+
+            if (data.token) {
+                userStore.setUser({ token: data.token, tkExpireDate: data.expiresIn})
+                router.push("/home")
+            } else {
+                router.push("/login")
+                toast.add({
+                    life: 5000,
+                    severity: "warn",
+                    summary: "Une erreur est survenue",
+                    detail: "Merci de vous authentifier une première fois"
+                })
+            }
+
+        } else {
+            toast.add({
+                life: 5000,
+                severity: "warn",
+                summary: "Une erreur est survenue",
+                detail: "Un email ou nom d'utilisateur semble déjà utilisé"
+            })
+        }
     }
 
     loading.value = false
